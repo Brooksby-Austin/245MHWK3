@@ -18,7 +18,10 @@ uof <- read.csv("uof_louisville.csv")
 #2
 #a
 uof <- uof |> mutate(hour = hour(hms(time_of_occurrence)))
-frequent_hour <- uof |> count(hour) |> arrange(desc(hour)) |> slice(1)
+frequent_hour <- uof |> count(hour) |> arrange(desc(n)) |> slice(1)
 frequent_hour <- frequent_hour$hour
 
 #b
+uof <- uof |> mutate(month = month(date_of_occurrence))
+least_frequent_month <- uof |> count(month) |> arrange(n) |> slice(1)
+least_frequent_month <- least_frequent_month$month
