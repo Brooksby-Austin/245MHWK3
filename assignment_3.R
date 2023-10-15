@@ -31,4 +31,8 @@ uof <- uof |> mutate(day = wday(date_of_occurrence))
 most_frequent_day <- uof |> count(day) |> arrange(desc(n)) |> slice(1)
 most_frequent_day <- most_frequent_day$day
 
+#d
+day_distribution <- uof |> mutate(mday = day(date_of_occurrence)) |> count(mday) |>
+  mutate(fraction = n/sum(n)) |> janitor::adorn_totals()
+
 
