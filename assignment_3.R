@@ -25,3 +25,10 @@ frequent_hour <- frequent_hour$hour
 uof <- uof |> mutate(month = month(date_of_occurrence))
 least_frequent_month <- uof |> count(month) |> arrange(n) |> slice(1)
 least_frequent_month <- least_frequent_month$month
+
+#c
+uof <- uof |> mutate(day = wday(date_of_occurrence))
+most_frequent_day <- uof |> count(day) |> arrange(desc(n)) |> slice(1)
+most_frequent_day <- most_frequent_day$day
+
+
