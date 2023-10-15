@@ -55,11 +55,14 @@ violent_force <- c("take down", "hobble", "ecw cartridge deployed", "knee strike
 uof <- uof |> mutate(violent_uof_1 = as.numeric((force_used_1 %in% violent_force))) 
 
 #f
-copy_uof <- uof |> select(force_used_1, violent_uof_1) |> filter(violent_uof_1 == 0) |> group_by(force_used_1) |> count()
-v_copy_uof <- uof |> select(force_used_1, violent_uof_1) |> filter(violent_uof_1 == 1) |> group_by(force_used_1) |> count()
-
 violent_force_service_table <- uof |> filter(violent_uof_1 == 1) |> count(service_rendered) |>
   mutate(fraction = n/sum(n)) |> adorn_totals()
 
+#4
+#a
+uof_filtered <- uof |> drop_na(citizen_race, citizen_gender) |> 
+  mutate(force_used_1_effective_binary = as.integer(force_used_1_effective == "yes"), rm.na = TRUE)
 
-
+#b
+uof_filtered_table <- uof_filtered |> group_by(citizen_gender, citizen_race) |> 
+  summarize(effective_1 = sum(force_used_1_effective_binary))
