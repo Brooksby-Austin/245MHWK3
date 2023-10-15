@@ -33,6 +33,33 @@ most_frequent_day <- most_frequent_day$day
 
 #d
 day_distribution <- uof |> mutate(mday = day(date_of_occurrence)) |> count(mday) |>
-  mutate(fraction = n/sum(n)) |> janitor::adorn_totals()
+  mutate(fraction = n/sum(n)) |> adorn_totals()
+
+#3
+#a
+force_used_1 <- uof |> distinct(force_used_1) |> t() |> c()
+
+#b
+force_used_2 <- uof |> distinct(force_used_2) |> t() |> c()
+
+#c
+all_force <- uof |> distinct(force_used_1, force_used_2, force_used_3, force_used_4,
+                            force_used_5, force_used_6, force_used_7, force_used_8) |>
+  t() |> c()
+
+#d
+violent_force <- c("take down", "hobble", "ecw cartridge deployed", "knee strike(s)",
+                   "12 ga. sock round", "take-down", "impact weapon",
+                   "kick", "deadly force used")
+#e
+uof <- uof |> mutate(violent_uof_1 = as.numeric((force_used_1 %in% violent_force))) 
+
+#f
+copy_uof <- uof |> select(force_used_1, violent_uof_1) |> filter(violent_uof_1 == 0) |> group_by(force_used_1) |> count()
+v_copy_uof <- uof |> select(force_used_1, violent_uof_1) |> filter(violent_uof_1 == 1) |> group_by(force_used_1) |> count()
+
+violent_force_service_table <- uof |> filter(violent_uof_1 == 1) |> count(service_rendered) |>
+  mutate(fraction = n/sum(n)) |> adorn_totals()
+
 
 
