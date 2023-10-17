@@ -45,7 +45,7 @@ force_used_2 <- uof |> distinct(force_used_2) |> t() |> c()
 #c
 all_force <- uof |> distinct(force_used_1, force_used_2, force_used_3, force_used_4,
                             force_used_5, force_used_6, force_used_7, force_used_8) |>
-  t() |> c()
+  t() |> c() |> unique()
 
 #d
 violent_force <- c("take down", "hobble", "ecw cartridge deployed", "knee strike(s)",
@@ -65,4 +65,5 @@ uof_filtered <- uof |> drop_na(citizen_race, citizen_gender) |>
 
 #b
 uof_filtered_table <- uof_filtered |> group_by(citizen_gender, citizen_race) |> 
-  summarize(effective_1 = sum(force_used_1_effective_binary))
+  summarize(effective_1 = sum(force_used_1_effective_binary, na.rm = TRUE), counts = length(force_used_1_effective_binary)) |> 
+  adorn_totals() |> mutate(fraction_effective = effective_1/counts)
