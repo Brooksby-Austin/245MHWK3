@@ -17,17 +17,18 @@ uof <- read_csv("uof_louisville.csv")
 
 #2
 #a
-uof <- uof |> mutate(hour = hour(hms(time_of_occurrence)))
-frequent_hour <- uof |> count(hour) |> arrange(desc(n)) |> head(1) |> pull(hour)
+frequent_hour <- uof |> mutate(hour = hour(hms(time_of_occurrence))) |> 
+  count(hour) |> arrange(desc(n)) |> head(1) |> pull(hour)
 
 #b
-uof <- uof |> mutate(month = month(date_of_occurrence))
-least_frequent_month <- uof |> count(month) |> arrange(n) |> head(1) |> pull(month)
+least_frequent_month <- uof |> mutate(month = month(date_of_occurrence)) |> 
+  count(month) |> arrange(n) |> head(1) |> pull(month)
 
 
 #c
-uof <- uof |> mutate(day = wday(date_of_occurrence, label = TRUE))
-most_frequent_day <- uof |> count(day) |> arrange(desc(n)) |> head(1) |> pull(day)
+uof <- uof 
+most_frequent_day <- uof |> mutate(day = wday(date_of_occurrence, label = TRUE)) |>
+  count(day) |> arrange(desc(n)) |> head(1) |> pull(day)
 
 
 #d
@@ -51,7 +52,7 @@ violent_force <- c("take down", "hobble", "ecw cartridge deployed", "knee strike
                    "12 ga. sock round", "take-down", "impact weapon",
                    "kick", "deadly force used")
 #e
-uof <- uof |> mutate(violent_uof_1 = ifelse(force_used_1 %in% violent_force, 1, 0))
+uof <- uof |> mutate(violent_uof_1 = if_else(force_used_1 %in% violent_force, 1, 0))
 
 #f
 violent_force_service_table <- uof |> filter(violent_uof_1 == 1) |> count(service_rendered) |>
@@ -60,7 +61,7 @@ violent_force_service_table <- uof |> filter(violent_uof_1 == 1) |> count(servic
 #4
 #a
 uof_filtered <- uof |> filter(citizen_gender == "male" | citizen_gender == "female") |> 
-  drop_na(citizen_race) |> 
+  filter(!is.na(citizen_race)) |> 
   mutate(force_used_1_effective_binary = ifelse(force_used_1_effective == "yes", 1, 0))
 
 #b
